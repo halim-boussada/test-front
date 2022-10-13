@@ -54,7 +54,37 @@ class Map {
   }
 
   getColoredMap() {
-    // TODO: That's where you work
-    // // TODO: That's where you work
+    var earth = this.map.map((data) => [...data]);
+    // check earth coardinations
+    const isEarth = (x, y) => {
+      return (
+        x >= 0 &&
+        y >= 0 &&
+        x < earth.length &&
+        y < earth[x].length &&
+        earth[x][y] === EARTH_POINT_TYPE
+      );
+    };
+    // color earth blocks
+    const colorblock = (x, y, color) => {
+      if (isEarth(x, y)) {
+        earth[x][y] = color;
+        colorblock(x + 1, y, color); // color top
+        colorblock(x, y + 1, color); // color right
+        colorblock(x - 1, y, color); // color bottom
+        colorblock(x, y - 1, color); // color left
+      }
+    };
+    // iturate over map
+    earth.forEach((e, i) => {
+      e.forEach((block, j) => {
+        if (block == WATER_POINT_TYPE) {
+          block = DEFAULT_COLORS[block];
+        } else if (block == EARTH_POINT_TYPE) {
+          colorblock(i, j, this.generateRandomColor());
+        }
+      });
+    });
+    return earth;
   }
 }
